@@ -24,7 +24,7 @@ in PostgreSQL for analysis.
 
 ## 🗂️ Project Structure
 
-| Directory                     | Description                                               |
+| Directory / File              | Description                                               |
 |-------------------------------|-----------------------------------------------------------|
 | `weather-streaming-project/`  | Root project directory                                    |
 | ├── `.github/`                | GitHub Actions for CI/CD                                  |
@@ -56,9 +56,84 @@ in PostgreSQL for analysis.
 | └── `requirements.txt`        | List of Python dependencies                               |
 
 ## 🚀 How to Get Started
+**1. Clone the Repository**
+   ```bash
+   git clone https://github.com/ViktoriiaViktoriia/weather-streaming-project.git
+   cd weather-streaming-project
+   ```
+**2. Install Dependencies**
+   1. Set up a virtual environment:
+      ```bash
+      python3 -m venv venv
+      source venv/bin/activate
+      ```
+   2. Install Python dependencies:
+      ```bash
+      pip install -r requirements.txt
+      ```
+   3. Install required system packages:
+      ```bash
+      # Update package list
+      sudo apt update && sudo apt upgrade -y
 
+      # Install PostgreSQL (Database)
+      sudo apt install -y postgresql postgresql-contrib
+
+      # Install Kafka (Streaming Platform)
+      sudo apt install -y default-jdk  # Kafka requires Java
+      wget https://dlcdn.apache.org/kafka/3.9.0/kafka-3.9.0-src.tgz
+      tar -xvzf kafka-3.9.0-src.tgz
+      sudo mv kafka-3.9.0-src /opt/kafka
+      rm kafka-3.9.0-src.tgz
+      
+      # Set correct permissions
+      sudo chown -R $USER:$USER /opt/kafka
+      chmod -R 755 /opt/kafka
+      
+      # Update environment variables
+      echo 'export PATH=$PATH:/opt/kafka/bin' >> ~/.bashrc
+      source ~/.bashrc
+
+      # Install additional dev tools for better process management(optional)
+      sudo apt install -y tmux htop unzip
+      ```
+**3. Run the pipeline:**
+   ```bash
+      # Start PostgreSQL
+      sudo service postgresql start
+      
+      # Start Kafka from /opt/kafka
+      # Start Zookeeper first
+      /opt/kafka/bin/zookeeper-server-start.sh -daemon /opt/kafka/config/zookeeper.properties
+      #Then start Kafka
+      /opt/kafka/bin/kafka-server-start.sh -daemon /opt/kafka/config/server.properties
+      
+      # Verify Kafka is running
+      ps aux | grep kafka
+      ps aux | grep zookeeper
+
+      # Check logs:
+      tail -f /opt/kafka/logs/server.log
+
+      # Stop running Kafka (if needed)
+      /opt/kafka/bin/kafka-server-stop.sh
+      # Stop running ZooKeeper (if needed)
+      /opt/kafka/bin/zookeeper-server-stop.sh
+
+      # Restart Kafka
+      /opt/kafka/bin/kafka-server-start.sh -daemon /opt/kafka/config/server.properties
+      
+      # Run the main script
+      python -m main
+   ```
 ## 🧪 Tests
+Run unit tests with:
+   ```bash
+   pytest tests/
+   ```
 
 ## 🤝 Contributions
+Your feedback and contributions are welcome! Submit issues or pull requests to collaborate.
 
 ## 📜 License 
+Licensed under the [Apache License 2.0](LICENSE)

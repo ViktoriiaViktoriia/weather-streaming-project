@@ -1,0 +1,21 @@
+# Basic Requirements
+python-dotenv       # For environment variables
+requests            # For API calls (OpenWeather)
+pandas              # For data processing
+
+# Database Connection
+sqlalchemy          # For database ORM
+psycopg2-binary     # For PostgreSQL connection
+
+# Logging & Testing
+pytest              # For unit testing
+flake8              # For code linting
+black               # For code formatting
+
+# Kafka & Async Processing
+confluent-kafka     # Kafka Python client
+fastapi             # For API (if needed)
+uvicorn             # ASGI server for FastAPI
+
+# CI/CD & DevOps
+pre-commit         # To enforce code style
