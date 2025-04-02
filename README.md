@@ -7,16 +7,21 @@ in PostgreSQL for analysis.
 
 
 ## 🔹 Features
-- Fetches live weather data.
-- Streams weather data from OpenWeather API with periodic updates using Kafka.
-- Stores processed data in PostgreSQL.
-- Allows easy SQL analysis of weather trends.
-- Uses CI/CD pipelines for continuous integration, automated testing, and deployment.
+- Live weather data retrieval: Fetches up-to-date weather data from the OpenWeather API.
+- Near real-time data streaming: Streams weather data from OpenWeather API with periodic updates using Kafka.
+- Cloud storage simulation: Stores raw data in GCS, imitating large-scale data pipelines while staying within 
+  free-tier limits.
+- ETL process: Processes and loads data into PostgreSQL, simulating structured data transformation workflows.
+- Scalable database design: Implements partitioning in PostgreSQL to optimize queries and prepare for future 
+  data growth.
+- SQL-Based weather analysis: Allows easy SQL queries to analyze weather trends and patterns.
+- Automated workflows: Uses CI/CD pipelines for continuous integration, automated testing, and deployment.
 
 
 ## 📦 Tech Stack
 - Python (Data ingestion & processing)
 - Kafka (Streaming pipeline)
+- GCS (Raw data storage)
 - PostgreSQL (Database storage & analysis)
 - Pytest (Unit testing)
 - GitHub Actions (CI/CD)
