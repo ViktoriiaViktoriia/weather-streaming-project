@@ -1,4 +1,5 @@
 # Basic Requirements
+dotenv              #
 python-dotenv       # For environment variables
 requests            # For API calls (OpenWeather)
 pandas              # For data processing
@@ -16,6 +17,7 @@ black               # For code formatting
 confluent-kafka     # Kafka Python client
 fastapi             # For API (if needed)
 uvicorn             # ASGI server for FastAPI
+
 
 # CI/CD & DevOps
 pre-commit         # To enforce code style
