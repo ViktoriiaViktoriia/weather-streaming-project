@@ -13,6 +13,7 @@ logger.info("Connecting to OpenWeather API using key: %s", API_KEY)
 
 # Kafka settings
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
+KAFKA_TOPIC_FORECAST = os.getenv("KAFKA_TOPIC_FORECAST")
 KAFKA_BROKER = os.getenv("KAFKA_BROKER")
 logger.info("Connecting to Kafka broker at %s on topic %s", KAFKA_BROKER, KAFKA_TOPIC)
 

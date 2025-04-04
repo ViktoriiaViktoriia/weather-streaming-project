@@ -1,5 +1,5 @@
 from config import logger
-from ingestion import stream_weather_data
+from ingestion import stream_weather_data, schedule_forecast
 
 
 def main():
@@ -7,6 +7,9 @@ def main():
         # Start weather data streaming
         stream_weather_data()
         logger.info("Weather data streamed successfully.")
+
+        # Handles scheduled forecast fetching
+        schedule_forecast()
     except KeyboardInterrupt:
         logger.info("Weather data streaming interrupted.")
     except Exception as e:
