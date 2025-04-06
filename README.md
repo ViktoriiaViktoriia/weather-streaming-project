@@ -135,7 +135,7 @@ in PostgreSQL for analysis.
 ## 🧪 Tests
 Run unit tests with:
    ```bash
-   pytest tests/
+   python -m pytest
    ```
 
 ## 🤝 Contributions

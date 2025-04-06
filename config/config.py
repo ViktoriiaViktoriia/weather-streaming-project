@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from logger_config import logger
+from .logger_config import logger
 
 # Load environment variables from .env file
 load_dotenv()
@@ -28,6 +28,13 @@ logger.info("Connecting to PostgreSQL database %s on %s:%s", DB_NAME, DB_HOST, D
 # Google Cloud Storage bucket
 GCS_BUCKET = os.getenv("GCS_BUCKET")
 logger.info("Accessing GCS Bucket: %s", GCS_BUCKET)
+
+# OpenWeather API Limits
+API_CALLS_PER_DAY = 30000
+
+# Selected cities within free API limits
+CITIES = ["Helsinki", "Tampere", "Oulu"]
+NUM_CITIES = len(CITIES)
 
 # GCP Quota Limits (Free Tier)
 # BQ_MAX_USAGE_GB = 1000  # 1TB BigQuery free-tier limit

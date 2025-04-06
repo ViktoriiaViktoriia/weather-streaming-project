@@ -1,1 +1,1 @@
-from .weather_producer import stream_weather_data, schedule_forecast
+from .weather_producer import fetch_weather, stream_weather_data, schedule_forecast

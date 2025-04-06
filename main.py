@@ -1,15 +1,15 @@
-from config import logger
+from config import logger, API_KEY, BASE_URL, CITIES
 from ingestion import stream_weather_data, schedule_forecast
 
 
 def main():
     try:
-        # Start weather data streaming
-        stream_weather_data()
-        logger.info("Weather data streamed successfully.")
+        for city in CITIES:
+            # Start weather data streaming
+            stream_weather_data(f"{BASE_URL}/weather?q={city}&APPID={API_KEY}", city)
 
-        # Handles scheduled forecast fetching
-        schedule_forecast()
+            # Handles scheduled forecast fetching
+            schedule_forecast(f"{BASE_URL}/forecast?q={city}&APPID={API_KEY}", city)
     except KeyboardInterrupt:
         logger.info("Weather data streaming interrupted.")
     except Exception as e:
