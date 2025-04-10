@@ -21,3 +21,7 @@ uvicorn             # ASGI server for FastAPI
 
 # CI/CD & DevOps
 pre-commit         # To enforce code style
+
+# GCS
+google-cloud-storage
+
