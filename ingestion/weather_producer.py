@@ -63,6 +63,7 @@ def stream_weather_data(url, city):
     while retries < max_retries:  # Retry logic applies to the current city
         try:
             weather_data = fetch_weather(url, city)
+            weather_data["type"] = KAFKA_TOPIC
             logger.info(f"Successfully fetched data for {city}")
 
             if weather_data:
@@ -87,6 +88,7 @@ def fetch_forecast(url, city):
 
     try:
         forecast_data = fetch_weather(url, city)
+        forecast_data["type"] = KAFKA_TOPIC_FORECAST
         logger.info(f"Fetched forecast for {city}")
 
         if forecast_data:
