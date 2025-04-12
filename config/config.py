@@ -28,6 +28,7 @@ logger.info("Connecting to PostgreSQL database %s on %s:%s", DB_NAME, DB_HOST, D
 # Google Cloud Storage bucket
 GCS_BUCKET = os.getenv("GCS_BUCKET")
 logger.info("Accessing GCS Bucket: %s", GCS_BUCKET)
+STORAGE_MAX_USAGE_GB = os.getenv("STORAGE_MAX_USAGE_GB")
 
 # OpenWeather API Limits
 API_CALLS_PER_DAY = 30000
@@ -36,7 +37,4 @@ API_CALLS_PER_DAY = 30000
 CITIES = ["Helsinki", "Tampere", "Oulu"]
 NUM_CITIES = len(CITIES)
 
-# GCP Quota Limits (Free Tier)
-# BQ_MAX_USAGE_GB = 1000  # 1TB BigQuery free-tier limit
-# PUBSUB_MAX_USAGE_GB = 10  # 10GB free-tier limit
-# STORAGE_MAX_USAGE_GB = 5  # 5GB free-tier limit
+
