@@ -105,14 +105,19 @@ def fetch_forecast(url, city):
 def schedule_forecast(url, city):
     """Schedules periodic fetching of 5-day forecasts for selected cities."""
 
-    schedule.every(12).hours.do(fetch_forecast(url, city))
-    logger.info(f"Forecast scheduler initialized for {city}.")
-
     try:
+        city_scheduler = schedule.Scheduler()  # Own scheduler per thread
+        # city_scheduler.every(10).seconds.do(fetch_forecast, url, city)  # For testing
+        city_scheduler.every(12).hours.do(fetch_forecast, url, city)
+        logger.info(f"Forecast scheduler initialized for {city}.")
+
         while True:
-            schedule.run_pending()
-            logger.info("Waiting for the next scheduled forecast fetch...")
+            city_scheduler.run_pending()
+            logger.info(f"Waiting for the next scheduled forecast fetch for {city}...")
+            # time.sleep(5)  # for testing
             time.sleep(3600)  # Check for scheduled tasks every hour
 
     except KeyboardInterrupt:
         logger.info("Stopping scheduled weather data fetch.")
+    except Exception as e:
+        logger.error(f"Error in forecast scheduler for {city}: {e}")
