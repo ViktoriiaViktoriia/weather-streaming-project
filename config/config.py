@@ -28,7 +28,7 @@ logger.info("Connecting to PostgreSQL database %s on %s:%s", DB_NAME, DB_HOST, D
 # Google Cloud Storage bucket
 GCS_BUCKET = os.getenv("GCS_BUCKET")
 logger.info("Accessing GCS Bucket: %s", GCS_BUCKET)
-STORAGE_MAX_USAGE_GB = os.getenv("STORAGE_MAX_USAGE_GB")
+STORAGE_MAX_USAGE_GB = float(os.getenv("STORAGE_MAX_USAGE_GB"))
 
 # OpenWeather API Limits
 API_CALLS_PER_DAY = 30000
