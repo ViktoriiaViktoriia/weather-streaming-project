@@ -86,11 +86,16 @@ in PostgreSQL for analysis.
       sudo apt install -y postgresql postgresql-contrib
 
       # Install Kafka (Streaming Platform)
+      # Go to: https://kafka.apache.org/downloads
+      # Choose a version (e.g., Kafka 3.9.0 with Scala 2.13)
+      # Under "Binary downloads", click the suggested mirror: kafka_2.13-3.9.0.tgz
+      tar -xzf kafka_2.13-3.9.0.tgz
+      mv kafka_2.13-3.9.0 kafka
+      
       sudo apt install -y default-jdk  # Kafka requires Java
-      wget https://dlcdn.apache.org/kafka/3.9.0/kafka-3.9.0-src.tgz
-      tar -xvzf kafka-3.9.0-src.tgz
-      sudo mv kafka-3.9.0-src /opt/kafka
-      rm kafka-3.9.0-src.tgz
+ 
+      sudo mv kafka /opt/
+      rm kafka_2.13-3.9.0.tgz
       
       # Set correct permissions
       sudo chown -R $USER:$USER /opt/kafka
@@ -108,16 +113,16 @@ in PostgreSQL for analysis.
       # Start PostgreSQL
       sudo service postgresql start
       
-      # Start Kafka from /opt/kafka
-      # Start Zookeeper first
-      /opt/kafka/bin/zookeeper-server-start.sh -daemon /opt/kafka/config/zookeeper.properties
-      #Then start Kafka
-      /opt/kafka/bin/kafka-server-start.sh -daemon /opt/kafka/config/server.properties
+      # Start Zookeeper first:
+      zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties
+      
+      #Then in a new terminal start Kafka:
+      kafka-server-start.sh /opt/kafka/config/server.properties
       
       # Verify Kafka is running
-      ps aux | grep kafka
-      ps aux | grep zookeeper
-
+      ps aux | grep '[k]afka'
+      ps aux | grep '[z]ookeeper'
+      
       # Check logs:
       tail -f /opt/kafka/logs/server.log
 
