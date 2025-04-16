@@ -175,3 +175,9 @@ cython_debug/
 
 # Keys (GCS)
 keys/
+
+# Kafka
+kafka/
+
+# Weather raw data
+weather_raw_data/
