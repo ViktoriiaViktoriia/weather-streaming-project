@@ -40,6 +40,24 @@ def execute_query(query, params=None):
             return result
         except Exception as e:
             logger.info(f"Error executing query: {e}")
+            return None
         finally:
             close_connection(conn)
-    return None
+
+
+def insert_many(query, data_list):
+    """Insert many rows using executemany()."""
+    conn = create_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.executemany(query, data_list)
+            conn.commit()
+            cursor.close()
+            logger.info(f"{len(data_list)} rows inserted.")
+        except Exception as e:
+            logger.error(f"Error in bulk insert: {e}")
+            conn.rollback()
+        finally:
+            close_connection(conn)
+
