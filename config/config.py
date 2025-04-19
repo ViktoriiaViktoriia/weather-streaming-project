@@ -37,4 +37,5 @@ API_CALLS_PER_DAY = 30000
 CITIES = ["Helsinki", "Tampere", "Oulu"]
 NUM_CITIES = len(CITIES)
 
-
+RAW_DIR = os.getenv("RAW_DIR", "weather_raw_data")
+PROCESSED_DIR = os.getenv("PROCESSED_DIR", os.path.join(RAW_DIR, "processed"))
