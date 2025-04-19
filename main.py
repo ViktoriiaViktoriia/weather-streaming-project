@@ -1,15 +1,18 @@
+import os
 import threading
 from threading import Thread
 import time
 
-from config import logger, API_KEY, BASE_URL, CITIES
+from config import logger, API_KEY, BASE_URL, CITIES, RAW_DIR, PROCESSED_DIR
 from ingestion import stream_weather_data, schedule_forecast
-from processing import weather_data_consumer
+from processing import weather_data_consumer, load_all_csvs
 
 
 def main():
 
     try:
+        os.makedirs(PROCESSED_DIR, exist_ok=True)
+
         # Start the consumer in a background thread
         consumer_thread = threading.Thread(target=weather_data_consumer, daemon=True)
         consumer_thread.start()
@@ -38,8 +41,16 @@ def main():
                     except Exception as e:
                         logger.error(f"Error starting forecast thread for {city}: {e}")
 
+            logger.info(" Starting weather data processing...")
+            result_df = load_all_csvs(RAW_DIR, PROCESSED_DIR)
+
+            if not result_df.empty:
+                logger.info(" ELT pipeline finished with data inserted.")
+            else:
+                logger.info(" No new data was found.")
+
             # Sleep before next round of current weather fetching
-            time.sleep(1 * 60)
+            time.sleep(5 * 60)
 
     except KeyboardInterrupt:
         logger.info("Weather data streaming interrupted.")
