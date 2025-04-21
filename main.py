@@ -42,12 +42,12 @@ def main():
                         logger.error(f"Error starting forecast thread for {city}: {e}")
 
             logger.info(" Starting weather data processing...")
-            result_df = load_all_csvs(RAW_DIR, PROCESSED_DIR)
+            result = load_all_csvs(RAW_DIR, PROCESSED_DIR)
 
-            if not result_df.empty:
-                logger.info(" ELT pipeline finished with data inserted.")
+            if result:
+                logger.info("ELT pipeline finished with data inserted.")
             else:
-                logger.info(" No new data was found.")
+                logger.info("ELT pipeline finished but no new data was inserted.")
 
             # Sleep before next round of current weather fetching
             time.sleep(5 * 60)
