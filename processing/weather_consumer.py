@@ -7,6 +7,19 @@ from config import (logger, KAFKA_TOPIC, KAFKA_TOPIC_FORECAST, KAFKA_BROKER, GCS
 from storage import upload_to_gcs
 
 
+def write_row(data, csv_path):
+    fieldnames = ["type", "city", "description", "temperature", "feels_like", "humidity", "wind",
+                  "pressure", "timestamp"]
+
+    with open(csv_path, mode='a', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        if file.tell() == 0:
+            writer.writeheader()
+
+        writer.writerow(data)
+
+
 def weather_data_consumer():
     # Configuration
     timestamp_str = datetime.now().strftime("%Y%m%d")
@@ -43,46 +56,38 @@ def weather_data_consumer():
             logger.info(f"Received message from topic: {message.topic()}")
 
             data = json.loads(message.value().decode("utf-8"))
-            # print("RAW KAFKA MESSAGE:", data)
+
             topic = data.get("type", "unknown")
 
-            # Consume and write to CSV
-            with open(weather_csv_path, mode='a', newline='') as file:
-                fieldnames = ["type", "city", "description", "temperature", "feels_like", "humidity", "wind",
-                              "pressure", "timestamp"]
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
+            if topic == KAFKA_TOPIC:
+                row = {
+                    "type": data["type"],
+                    "city": data["name"],
+                    "description": data["weather"][0]["description"],
+                    "temperature": data["main"]["temp"],
+                    "feels_like": data["main"]["feels_like"],
+                    "humidity": data["main"]["humidity"],
+                    "wind": data["wind"]["speed"],
+                    "pressure": data["main"]["pressure"],
+                    "timestamp": data["dt"]
+                }
+                write_row(row, weather_csv_path)
+            elif topic == KAFKA_TOPIC_FORECAST:
+                row = {
+                    "type": data["type"],
+                    "city": data["city"]["name"],
+                    "description": data["list"][0]["weather"][0]["description"],
+                    "temperature": data["list"][0]["main"]["temp"],
+                    "feels_like": data["list"][0]["main"]["feels_like"],
+                    "humidity": data["list"][0]["main"]["humidity"],
+                    "wind": data["list"][0]["wind"]["speed"],
+                    "pressure": data["list"][0]["main"]["pressure"],
+                    "timestamp": data["list"][0]["dt"]
+                }
+                write_row(row, weather_csv_path)
 
-                # Write header only once if file is empty
-                if file.tell() == 0:
-                    writer.writeheader()
-
-                if topic == KAFKA_TOPIC:
-                    writer.writerow({
-                        "type": data["type"],
-                        "city": data["name"],
-                        "description": data["weather"][0]["description"],
-                        "temperature": data["main"]["temp"],
-                        "feels_like": data["main"]["feels_like"],
-                        "humidity": data["main"]["humidity"],
-                        "wind": data["wind"]["speed"],
-                        "pressure": data["main"]["pressure"],
-                        "timestamp": data["dt"]
-                    })
-                elif topic == KAFKA_TOPIC_FORECAST:
-                    # print("RAW KAFKA MESSAGE:", data)
-                    writer.writerow({
-                        "type": data["type"],
-                        "city": data["city"]["name"],
-                        "description": data["list"][0]["weather"][0]["description"],
-                        "temperature": data["list"][0]["main"]["temp"],
-                        "feels_like": data["list"][0]["main"]["feels_like"],
-                        "humidity": data["list"][0]["main"]["humidity"],
-                        "wind": data["list"][0]["wind"]["speed"],
-                        "pressure": data["list"][0]["main"]["pressure"],
-                        "timestamp": data["list"][0]["dt"]
-                    })
-                # Upload to GCS
-                upload_to_gcs(weather_csv_path, GCS_BUCKET, f"raw_weather_data/{weather_csv_path}")
+            # Upload to GCS
+            upload_to_gcs(weather_csv_path, GCS_BUCKET, f"raw_weather_data/{weather_csv_path}")
 
     except KeyboardInterrupt:
         logger.info("\n[Shutdown] Interrupted by user.")
