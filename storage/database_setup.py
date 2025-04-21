@@ -34,12 +34,19 @@ def execute_query(query, params=None):
         try:
             cursor = conn.cursor()
             cursor.execute(query, params)
-            result = cursor.fetchall()
+
+            # Only fetch results if it's a SELECT query
+            if query.strip().lower().startswith("select"):
+                result = cursor.fetchall()
+            else:
+                conn.commit()  # For INSERT/UPDATE/DDL
+                result = None
+
             cursor.close()
             logger.info("The query executed successfully.")
             return result
         except Exception as e:
-            logger.info(f"Error executing query: {e}")
+            logger.error(f"Error executing query: {e}")
             return None
         finally:
             close_connection(conn)
