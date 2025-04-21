@@ -138,9 +138,13 @@ in PostgreSQL for analysis.
       python -m main
    ```
 ## 🧪 Tests
-Run unit tests with:
+To run all unit tests, use either of the following commands:
    ```bash
    python -m pytest
+   ```
+or: 
+```bash
+   pytest tests/
    ```
 
 ## 🤝 Contributions
