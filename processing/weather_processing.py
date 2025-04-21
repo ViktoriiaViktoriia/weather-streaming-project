@@ -26,7 +26,7 @@ def process_weather_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def insert_weather_data(df: pd.DataFrame):
+def insert_weather_data(df: pd.DataFrame) -> bool:
     """Insert processed weather data into PostgreSQL database."""
     create_table_query = """
     CREATE TABLE IF NOT EXISTS weather_data (
@@ -68,11 +68,14 @@ def insert_weather_data(df: pd.DataFrame):
         if data_list:  # avoid inserting empty data
             # Bulk insert
             insert_many(insert_query, data_list)
+            return True
         else:
             logger.warning("DataFrame is empty. No data to insert.")
+            return False
 
     except Exception as e:
         logger.error(f"Error inserting data into PostgreSQL: {e}")
+        return False
 
 
 def load_all_csvs(raw_data_folder_path, processed_data_folder_path):
@@ -103,7 +106,7 @@ def load_all_csvs(raw_data_folder_path, processed_data_folder_path):
 
             logger.info(" Successfully processed and inserted data.")
 
-            return processed_df
+            return insert_weather_data(processed_df)
 
         else:
             logger.info(" No CSV files to process.")
