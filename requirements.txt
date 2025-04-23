@@ -2,6 +2,8 @@
 dotenv              #
 python-dotenv       # For environment variables
 requests            # For API calls (OpenWeather)
+requests-mock
+schedule
 pandas              # For data processing
 
 # Database Connection
@@ -10,6 +12,7 @@ psycopg2-binary     # For PostgreSQL connection
 
 # Logging & Testing
 pytest              # For unit testing
+pytest-mock
 flake8              # For code linting
 black               # For code formatting
 
