@@ -6,13 +6,25 @@ from config import logger
 from storage import execute_query, insert_many
 
 
+def check_timestamp(tstmp):
+    try:
+        tstmp = float(tstmp)
+        return pd.to_datetime(tstmp, unit='s', errors='coerce')
+    except (ValueError, TypeError):
+        try:
+            return pd.to_datetime(tstmp)
+        except (ValueError, TypeError, pd.errors.ParserError):
+            return pd.NaT
+
+
 def process_weather_data(df: pd.DataFrame) -> pd.DataFrame:
     """Clean and format the raw weather DataFrame."""
     df = df.copy()
 
     # Example cleaning steps
-    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s', errors='coerce')
-    df['city'] = df['city'].str.title().str.strip()
+    df['timestamp'] = df['timestamp'].apply(check_timestamp)
+
+    df['city'] = df['city'].astype(str).str.title().str.strip()
 
     df.drop_duplicates(subset=['city', 'timestamp'], inplace=True)
 
