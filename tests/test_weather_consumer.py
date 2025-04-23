@@ -1,9 +1,8 @@
-import json
-from datetime import datetime
-from unittest.mock import MagicMock
-import pytest
-import tempfile
 import csv
+from datetime import datetime
+import json
+import tempfile
+from unittest.mock import MagicMock
 
 from processing import write_row
 
