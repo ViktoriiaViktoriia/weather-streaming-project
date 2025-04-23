@@ -3,7 +3,6 @@ import requests_mock
 import pytest
 from unittest.mock import patch, call
 
-from config import logger, API_KEY, BASE_URL, KAFKA_TOPIC, KAFKA_TOPIC_FORECAST, KAFKA_BROKER
 from ingestion import fetch_weather, stream_weather_data
 
 
