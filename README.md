@@ -1,9 +1,10 @@
-# 📌 Project: Real-Time Weather Streaming with Kafka & PostgreSQL
+# 📌 Project: Real-Time Weather Streaming with Kafka, GCS, and PostgreSQL
 
 
 ## 🚀 Overview
-This project fetches weather data from OpenWeather API, streams it using Apache Kafka, and stores it 
-in PostgreSQL for analysis.
+This project implements an ELT data pipeline that fetches weather data from the OpenWeather API,  
+streams it using Apache Kafka, stores the raw data in Google Cloud Storage (GCS),  
+transforms it, and then saves it into a PostgreSQL database for analysis.
 
 
 ## 🔹 Features
@@ -11,7 +12,7 @@ in PostgreSQL for analysis.
 - Near real-time data streaming: Streams weather data from OpenWeather API with periodic updates using Kafka.
 - Cloud storage simulation: Stores raw data in GCS, imitating large-scale data pipelines while staying within 
   free-tier limits.
-- ETL process: Processes and loads data into PostgreSQL, simulating structured data transformation workflows.
+- ELT process: Transforms and inserts structured data into PostgreSQL, simulating real-world data workflows.
 - Scalable database design: Implements partitioning in PostgreSQL to optimize queries and prepare for future 
   data growth.
 - SQL-Based weather analysis: Allows easy SQL queries to analyze weather trends and patterns.
@@ -29,37 +30,41 @@ in PostgreSQL for analysis.
 
 ## 🗂️ Project Structure
 
-| Directory / File                | Description                                                                             |
-|---------------------------------|-----------------------------------------------------------------------------------------|
-| `weather-streaming-project/`    | Root project directory                                                                  |
-| ├── `.github/`                  | GitHub Actions for CI/CD                                                                |
-| │   ├── `workflows/`            | Contains CI/CD pipeline configurations                                                  |
-| ├── `config/`                   | Stores configuration settings                                                           |
-| │   ├── `__init__.py`           | Initialize the config package                                                           | 
-| │   ├── `config.py`             | Stores API keys, Kafka, and DB settings                                                 |
-| │   ├── `logger_config.py`      | Logger configuration                                                                    |
-| ├── `ingestion/`                | Fetches and streams weather data                                                        |
-| │   ├── `__init__.py`           | Initialize the ingestion package                                                        |
-| │   ├── `weather_producer.py`   | Fetches weather data from API & sends it to Kafka topic                                 |
-| ├── `logs/`                     | Stores application logs                                                                 |
-| │   ├── `app.log`               | Main log file                                                                           |
-| ├── `processing/`               | Consumes and processes streamed data                                                    |
-| │   ├── `__init__.py`           | Initialize the processing package                                                       |                         
-| │   ├── `weather_consumer.py`   | Listens to the Kafka topic, subscribes to the weather data & and writes raw data to GCS |
-| │   ├── `weather_processing.py` | Fetch data from GCS, process it, and then store the results in PostgreSQL               | 
-| ├── `storage/`                  | Handles database and cloud storage operations                                           |
-| │   ├── `__init__.py`           | Initialize the storage package                                                          |                                     
-| │   ├── `database_setup.py`     | Creates PostgreSQL tables                                                               |
-| │   ├── `upload_to_gcs.py`      | Saves raw data to Google Cloud Storage (GCS)                                            |
-| ├── `tests/`                    | Contains unit tests for the project                                                     |
-| │   ├── `__init__.py`           | Initialize the tests package                                                            |
-| │   ├── `test.py`               | Unit tests                                                                              |
-| ├── `.env`                      | Stores API keys, database credentials (excluded from Git)                               |
-| ├── `.gitignore`                | Excludes unnecessary files                                                              |
-| ├── `LICENSE`                   | License information                                                                     |
-| ├── `main.py`                   | Main script orchestrating tasks                                                         |
-| ├── `README.md`                 | Project documentation                                                                   |
-| └── `requirements.txt`          | List of Python dependencies                                                             |
+| Directory / File                     | Description                                                                             |
+|--------------------------------------|-----------------------------------------------------------------------------------------|
+| `weather-streaming-project/`         | Root project directory                                                                  |
+| ├── `.github/`                       | GitHub Actions for CI/CD                                                                |
+| │   ├── `workflows/`                 | Contains CI/CD pipeline configurations                                                  |
+| │   │    ├── `test.yml`              | Runs Python unit tests                                                                  |
+| ├── `config/`                        | Stores configuration settings                                                           |
+| │   ├── `__init__.py`                | Initialize the config package                                                           | 
+| │   ├── `config.py`                  | Stores API keys, Kafka, and DB settings                                                 |
+| │   ├── `logger_config.py`           | Logger configuration                                                                    |
+| ├── `ingestion/`                     | Fetches and streams weather data                                                        |
+| │   ├── `__init__.py`                | Initialize the ingestion package                                                        |
+| │   ├── `weather_producer.py`        | Fetches weather data from API & sends it to Kafka topic                                 |
+| ├── `logs/`                          | Stores application logs                                                                 |
+| │   ├── `app.log`                    | Main log file                                                                           |
+| ├── `processing/`                    | Consumes and processes streamed data                                                    |
+| │   ├── `__init__.py`                | Initialize the processing package                                                       |                         
+| │   ├── `weather_consumer.py`        | Listens to the Kafka topic, subscribes to the weather data & and writes raw data to GCS |
+| │   ├── `weather_processing.py`      | Fetch data from GCS, process it, and then store the results in PostgreSQL               | 
+| ├── `storage/`                       | Handles database and cloud storage operations                                           |
+| │   ├── `__init__.py`                | Initialize the storage package                                                          |                                     
+| │   ├── `database_setup.py`          | Creates PostgreSQL tables                                                               |
+| │   ├── `upload_to_gcs.py`           | Saves raw data to Google Cloud Storage (GCS)                                            |
+| ├── `tests/`                         | Contains unit tests for the project                                                     |
+| │   ├── `__init__.py`                | Initialize the tests package                                                            |
+| │   ├── `test_gcs_client_access.py`  | Tests access to Google Cloud Storage                                                    |
+| │   ├── `test_weather_consumer.py`   | Unit tests: consumer                                                                    |
+| │   ├── `test_weather_processing.py` | Unit tests: data processing and insert to database                                      |
+| │   ├── `test_weather_producer.py`   | Unit tests: producer                                                                    |
+| ├── `.env`                           | Stores API keys, database credentials (excluded from Git)                               |
+| ├── `.gitignore`                     | Excludes unnecessary files                                                              |
+| ├── `LICENSE`                        | License information                                                                     |
+| ├── `main.py`                        | Main script orchestrating tasks                                                         |
+| ├── `README.md`                      | Project documentation                                                                   |
+| └── `requirements.txt`               | List of Python dependencies                                                             |
 
 ## 🚀 How to Get Started
 **1. Clone the Repository**
@@ -146,6 +151,9 @@ or:
 ```bash
    pytest tests/
    ```
+## 🧪 CI
+Unit tests are automatically run via GitHub Actions on every push.  
+📄 Workflow file: `.github/workflows/test.yml`
 
 ## 🤝 Contributions
 Your feedback and contributions are welcome! Submit issues or pull requests to collaborate.
