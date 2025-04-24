@@ -11,6 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      RAW_DIR: ${{ secrets.RAW_DIR }}
+      PROCESSED_DIR: ${{ secrets.PROCESSED_DIR }}
+      OPENWEATHER_BASE_URL: ${{ secrets.OPENWEATHER_BASE_URL }}
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+      KAFKA_BROKER: ${{ secrets.KAFKA_BROKER }}
+      KAFKA_TOPIC: ${{ secrets.KAFKA_TOPIC }}
+      KAFKA_TOPIC_FORECAST: ${{ secrets.KAFKA_TOPIC_FORECAST }}
+      GCS_BUCKET: ${{ secrets.GCS_BUCKET }}
+      STORAGE_MAX_USAGE_GB: ${{ secrets.STORAGE_MAX_USAGE_GB }}
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_PORT: ${{ secrets.DB_PORT }}
       DB_USER: ${{ secrets.DB_USER }}
@@ -45,6 +55,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Set up Google Application Credentials
+      run: |
+        echo "${GOOGLE_APPLICATION_CREDENTIALS}" > $HOME/gcloud_key.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud_key.json" >> $GITHUB_ENV
 
     - name: Wait for PostgreSQL to be ready
       run: sleep 10
