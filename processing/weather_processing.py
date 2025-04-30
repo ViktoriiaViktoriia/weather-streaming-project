@@ -26,7 +26,8 @@ def process_weather_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df['city'] = df['city'].astype(str).str.title().str.strip()
 
-    df.drop_duplicates(subset=['city', 'timestamp'], inplace=True)
+    # Remove exact duplicates based on city, type, timestamp
+    df.drop_duplicates(subset=['city', 'type', 'timestamp'], inplace=True)
 
     # Drop rows with missing essential values
     df.dropna(subset=['timestamp', 'city', 'temperature'], inplace=True)
@@ -41,7 +42,7 @@ def process_weather_data(df: pd.DataFrame) -> pd.DataFrame:
 def insert_weather_data(df: pd.DataFrame) -> bool:
     """Insert processed weather data into PostgreSQL database."""
     create_table_query = """
-    CREATE TABLE IF NOT EXISTS weather_data (
+    CREATE TABLE IF NOT EXISTS weather_data_partition (
         id SERIAL PRIMARY KEY,
         type TEXT,
         city TEXT,
@@ -56,7 +57,7 @@ def insert_weather_data(df: pd.DataFrame) -> bool:
     """
 
     insert_query = """
-    INSERT INTO weather_data (
+    INSERT INTO weather_data_partition (
         type, city, description, temperature,
         feels_like, humidity, wind, pressure, timestamp
     )
