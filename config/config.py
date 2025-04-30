@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
 from .logger_config import logger
 
@@ -24,6 +25,8 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 logger.info("Connecting to PostgreSQL database %s on %s:%s", DB_NAME, DB_HOST, DB_PORT)
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+engine = create_engine(DATABASE_URL)    # Create SQLAlchemy engine
 
 # Google Cloud Storage bucket
 GCS_BUCKET = os.getenv("GCS_BUCKET")
