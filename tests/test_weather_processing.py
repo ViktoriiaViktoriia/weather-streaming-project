@@ -9,6 +9,7 @@ def test_data_cleaning():
 
     df = pd.DataFrame({
         "city": ["  helsinki", "  helsinki", "TAMPERE  ", "oulu "],
+        "type": ["weather_current", "weather_current", "weather_current", "weather_current"],
         "timestamp": ["2024-01-01 12:00", "2024-01-01 12:00", 1713203988, "1713203987"],
         "temperature": [285, 285, 295, 290],   # Kelvin
         "feels_like": [280, 280, 285, 280]  # Kelvin
