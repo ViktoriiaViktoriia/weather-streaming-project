@@ -3,7 +3,7 @@ This script initializes partitioned tables in the PostgreSQL database.
 
 Usage:
     Run manually once before starting the main pipeline:
-        $ PYTHONPATH=. python setup/setup_database.py
+        $ PYTHONPATH=. storage/partition_setup.py
 """
 
 from sqlalchemy import create_engine, text
