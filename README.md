@@ -13,8 +13,8 @@ transforms it, and then saves it into a PostgreSQL database for analysis.
 - Cloud storage simulation: Stores raw data in GCS, imitating large-scale data pipelines while staying within 
   free-tier limits.
 - ELT process: Transforms and inserts structured data into PostgreSQL, simulating real-world data workflows.
-- Scalable database design: Implements partitioning in PostgreSQL to optimize queries and prepare for future 
-  data growth.
+- Scalable database design: Implements partitioning in PostgreSQL to optimize queries, improve performance by 
+  limiting scans to only relevant partitions based on city and type filters, and prepare for future data growth.
 - SQL-Based weather analysis: Allows easy SQL queries to analyze weather trends and patterns.
 - Automated workflows: Uses CI/CD pipelines for continuous integration, automated testing, and deployment.
 
@@ -139,7 +139,12 @@ transforms it, and then saves it into a PostgreSQL database for analysis.
       # Restart Kafka
       /opt/kafka/bin/kafka-server-start.sh -daemon /opt/kafka/config/server.properties
       
-      # Run the main script
+      # Create Partitioned Tables
+      # Before running the main pipeline (main.py), you need to manually (only once) run a script 
+      # to create partitioned tables and database indexes:
+      PYTHONPATH=. storage/partition_setup.py
+      
+      # Once the database structure is initialized, run the main script:
       python -m main
    ```
 ## 🧪 Tests
